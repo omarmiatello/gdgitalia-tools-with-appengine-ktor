@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cronentries>
+
+    <!-- Download: groups & events details -->
+
+    <cron>
+        <url>/refresh/firebase/from/meetup</url>
+        <description>Update Meetup Groups</description>
+        <schedule>every 4 hours from 07:50 to 19:50</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
+    <cron>
+        <url>/refresh/firebase/from/meetup/events</url>
+        <description>Update Meetup Events</description>
+        <schedule>every 4 hours from 07:51 to 19:51</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
+
+    <!-- Download: speakers & slides details -->
+
+    <cron>
+        <url>/refresh/firebase/from/db/slides</url>
+        <description>Update Meetup Events</description>
+        <schedule>every 4 hours from 07:50 to 19:50</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
+
+    <!-- Update tags for speakers and groups -->
+
+    <cron>
+        <url>/refresh/firebase/from/db/tags</url>
+        <description>Update Tags for Groups and Speakers</description>
+        <schedule>every 4 hours from 07:52 to 19:52</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
+
+    <!-- Send notifications! -->
+
+    <cron>
+        <url>/notification/telegram/nextweek</url>
+        <description>Send notification nextweek in Telegram channel "All events"</description>
+        <schedule>every 4 hours from 08:00 to 20:00</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
+    <cron>
+        <url>/notification/telegram/bychannel</url>
+        <description>Send notification events/slide in Telegram channels</description>
+        <schedule>every 4 hours from 08:00 to 20:00</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
+
+</cronentries>
+
+
+

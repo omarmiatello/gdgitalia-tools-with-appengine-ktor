@@ -1,5 +1,6 @@
 package com.github.gdgitalia.tools
 
+import com.github.gdgitalia.tools.appengine.cacheUriOr
 import com.github.gdgitalia.tools.data.*
 import com.github.gdgitalia.tools.utils.toJsonPretty
 import io.ktor.application.call
@@ -23,17 +24,21 @@ data class TagJsonResponse(val name: String, val slug: String, val hashtag: Stri
 fun Routing.gdg() {
     route("gdg") {
         get("groups.json") {
-            val groups = FireDB.allGroups.toGroupResponseList()
-            call.respondText(groups.toJsonPretty(GroupResponse.serializer().list))
+            call.respondText(cacheUriOr {
+                val groups = FireDB.allGroups.toGroupResponseList()
+                groups.toJsonPretty(GroupResponse.serializer().list)
+            })
         }
 
         get("groups_events.json") {
-            val eventsMap = FireDB.eventsMap
-            val groupsAndEvents = FireDB.allGroups.map {
-                val events = eventsMap[it.slug]?.values?.toEventResponseList()
-                it.toResponse(events)
-            }
-            call.respondText(groupsAndEvents.toJsonPretty(GroupResponse.serializer().list))
+            call.respondText(cacheUriOr {
+                val eventsMap = FireDB.eventsMap
+                val groupsAndEvents = FireDB.allGroups.map {
+                    val events = eventsMap[it.slug]?.values?.toEventResponseList()
+                    it.toResponse(events)
+                }
+                groupsAndEvents.toJsonPretty(GroupResponse.serializer().list)
+            })
         }
 
         get("groups") {
@@ -72,10 +77,14 @@ fun Routing.gdg() {
         }
 
         get("groups/{gdgId}.json") {
-            val gdgId = call.parameters["gdgId"]!!
-            val events = FireDB.getEventsBy(gdgId).values.toEventResponseList()
-            val group = FireDB.getGroup(gdgId)!!.toResponse(events)
-            call.respondText(group.toJsonPretty(GroupResponse.serializer()))
+            cacheUriOr {
+                val gdgId = call.parameters["gdgId"]!!
+                val events = FireDB.getEventsBy(gdgId).values.toEventResponseList()
+                val group = FireDB.getGroup(gdgId)?.toResponse(events)
+                group?.toJsonPretty(GroupResponse.serializer()).orEmpty()
+            }.also {
+                if (it.isEmpty()) call.respond(HttpStatusCode.NotFound) else call.respondText(it)
+            }
         }
 
         get("groups/{gdgId}") {
@@ -101,33 +110,39 @@ fun Routing.gdg() {
         }
 
         get("speakers.json") {
-            val speakers = FireDB.speakersMap.values.toSpeakerResponseList()
-            call.respondText(speakers.toJsonPretty(SpeakerResponse.serializer().list))
+            call.respondText(cacheUriOr {
+                val speakers = FireDB.speakersMap.values.toSpeakerResponseList()
+                speakers.toJsonPretty(SpeakerResponse.serializer().list)
+            })
         }
 
         get("speakers_slides.json") {
-            val slidesMap = FireDB.slidesMap
-            val speakersAndSlides = FireDB.speakersMap.values.map {
-                val slides = slidesMap[it.slug]?.values?.toSlideResponseList()
-                it.toResponse(slides)
-            }
-            call.respondText(speakersAndSlides.toJsonPretty(SpeakerResponse.serializer().list))
+            call.respondText(cacheUriOr {
+                val slidesMap = FireDB.slidesMap
+                val speakersAndSlides = FireDB.speakersMap.values.map {
+                    val slides = slidesMap[it.slug]?.values?.toSlideResponseList()
+                    it.toResponse(slides)
+                }
+                speakersAndSlides.toJsonPretty(SpeakerResponse.serializer().list)
+            })
         }
 
         get("speakers/{speaker}.json") {
-            val speakerParam = call.parameters["speaker"]!!
-            val slides = FireDB.getSlidesBy(speakerParam).values.toSlideResponseList()
-            val speaker = FireDB.getSpeaker(speakerParam)?.toResponse(slides)
-            if (speaker != null) {
-                call.respondText(speaker.toJsonPretty(SpeakerResponse.serializer()))
-            } else {
-                call.respond(HttpStatusCode.NotFound)
+            cacheUriOr {
+                val speakerParam = call.parameters["speaker"]!!
+                val slides = FireDB.getSlidesBy(speakerParam).values.toSlideResponseList()
+                val speaker = FireDB.getSpeaker(speakerParam)?.toResponse(slides)
+                speaker?.toJsonPretty(SpeakerResponse.serializer()).orEmpty()
+            }.also {
+                if (it.isEmpty()) call.respond(HttpStatusCode.NotFound) else call.respondText(it)
             }
         }
 
         get("tag.json") {
-            val tagMap = FireDB.tagsMap.values.toTagResponseList()
-            call.respondText(tagMap.toJsonPretty(TagFullResponse.serializer().list))
+            call.respondText(cacheUriOr {
+                val tagMap = FireDB.tagsMap.values.toTagResponseList()
+                tagMap.toJsonPretty(TagFullResponse.serializer().list)
+            })
         }
 
         get("tag") {
@@ -147,12 +162,12 @@ fun Routing.gdg() {
         }
 
         get("tag/{tag}.json") {
-            val tagParam = call.parameters["tag"]!!
-            val tag = FireDB.getTag(tagParam)?.toFullResponse()
-            if (tag != null) {
-                call.respondText(tag.toJsonPretty(TagFullResponse.serializer()))
-            } else {
-                call.respond(HttpStatusCode.NotFound)
+            cacheUriOr {
+                val tagParam = call.parameters["tag"]!!
+                val tag = FireDB.getTag(tagParam)?.toFullResponse()
+                tag?.toJsonPretty(TagFullResponse.serializer()).orEmpty()
+            }.also {
+                if (it.isEmpty()) call.respond(HttpStatusCode.NotFound) else call.respondText(it)
             }
         }
 

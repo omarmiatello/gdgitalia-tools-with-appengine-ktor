@@ -1,5 +1,7 @@
 package com.github.gdgitalia.tools
 
+import com.github.gdgitalia.tools.appengine.AppEngineCache
+import com.github.gdgitalia.tools.data.FireDB
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -33,25 +35,66 @@ fun Application.main() {
         // It provides a DSL for building HTML to a Writer, potentially in a chunked way.
         // More information about this DSL: https://github.com/Kotlin/kotlinx.html
         get("/") {
+            val cache = AppEngineCache(useLocalCache = true)
+            val groups = cache.getOrPut("apiGroups") { FireDB.allGroups.map { it.slug }.joinToString("|") }
+                .split("|")
+            val speakers = cache.getOrPut("apiSpeaker") { FireDB.speakersMap.map { it.value.slug }.joinToString("|") }
+                .split("|")
+            val tags = cache.getOrPut("apiTag") { FireDB.tagsMap.map { it.value.slug }.joinToString("|") }
+                .split("|")
+
             call.respondHtml {
-                head { title { +"GDG Italia - Tools Project" } }
+
+                head {
+                    meta { charset = "utf-8" }
+                    meta("viewport", "width=device-width, initial-scale=1")
+                    title { +"GDG Italia - Tools Project" }
+                    styleLink("https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css")
+                }
                 body {
-                    h4 { +"Website" }
-                    p { a("/gdg/groups") { +"gdg/groups" } }
-                    p { a("/gdg/groups/gdg-milano") { +"gdg/groups/gdg-milano" } }
-                    p { a("/gdg/tag") { +"gdg/tag" } }
-                    p { a("/gdg/tag/devfest") { +"gdg/tag/devfest" } }
-                    h4 { +"API" }
-                    p { a("/gdg/groups.json") { +"gdg/groups.json" } }
-                    p { a("/gdg/groups_events.json") { +"gdg/groups_events.json" } }
-                    p { a("/gdg/groups/gdg-milano.json") { +"gdg/groups/gdg-milano.json" } }
-                    p { a("/gdg/speakers.json") { +"gdg/speakers.json" } }
-                    p { a("/gdg/speakers_slides.json") { +"gdg/speakers_slides.json" } }
-                    p { a("/gdg/speakers/omar-miatello.json") { +"gdg/speakers/omar-miatello.json" } }
-                    p { a("/gdg/tag.json") { +"gdg/tag.json" } }
-                    p { a("/gdg/tag/devfest.json") { +"gdg/tag/devfest.json" } }
-                    h4 { +"Telegram channel" }
-                    p { a("https://t.me/gdgeventi") { +"@gdgeventi" } }
+                    section("section") {
+                        div("container") {
+                            h1("title") {
+                                +"Website ("
+                                a("https://github.com/jacklt/gdgitalia-tools-with-appengine-ktor") {
+                                    +"source"
+                                }
+                                +")"
+                            }
+                            p { a("/gdg/groups") { +"groups" } }
+                            p { a("/gdg/groups/gdg-milano") { +"groups/gdg-milano" } }
+                            p { a("/gdg/tag") { +"tag" } }
+                            p { a("/gdg/tag/devfest") { +"tag/devfest" } }
+                            h1("title") { +"API" }
+                            div("columns") {
+                                div("column") {
+                                    h2("subtitle") { +"Groups API" }
+                                    p { a("/gdg/groups.json") { +"groups.json" } }
+                                    p { a("/gdg/groups_events.json") { +"groups_events.json" } }
+                                    groups.forEach { slug ->
+                                        p { a("/gdg/groups/$slug.json") { +"groups/$slug.json" } }
+                                    }
+                                }
+                                div("column") {
+                                    h2("subtitle") { +"Speakers API" }
+                                    p { a("/gdg/speakers.json") { +"speakers.json" } }
+                                    p { a("/gdg/speakers_slides.json") { +"speakers_slides.json" } }
+                                    speakers.forEach { slug ->
+                                        p { a("/gdg/speakers/$slug.json") { +"speakers/$slug.json" } }
+                                    }
+                                }
+                                div("column") {
+                                    h2("subtitle") { +"Tags API" }
+                                    p { a("/gdg/tag.json") { +"tag.json" } }
+                                    tags.forEach { slug ->
+                                        p { a("/gdg/tag/$slug.json") { +"tag/$slug.json" } }
+                                    }
+                                }
+                            }
+                            h1("title") { +"Telegram channel" }
+                            p { a("https://t.me/gdgeventi") { +"@gdgeventi" } }
+                        }
+                    }
                 }
             }
         }

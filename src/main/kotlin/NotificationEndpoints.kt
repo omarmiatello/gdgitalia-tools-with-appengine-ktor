@@ -134,7 +134,7 @@ fun Routing.notification() {
 
             val futureHelper = TelegramHelper(chatId, TelegramHelper.TYPE_NEXTWEEK_HELPER)
             val futureStatus = futureHelper.getMessageStatus("future")
-            val maxShowFutureEvents = 10
+            val maxShowFutureEvents = 5
             val futureMsg = if (!futureEvents.isNullOrEmpty()) {
                 ("Prossimamente:\n" +
                         futureEvents.take(maxShowFutureEvents)

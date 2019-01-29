@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.data
+package com.github.jacklt.gdgtools.data
 
 import kotlinx.serialization.Serializable
 

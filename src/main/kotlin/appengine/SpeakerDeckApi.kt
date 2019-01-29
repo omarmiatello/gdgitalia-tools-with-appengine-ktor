@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.appengine
+package com.github.jacklt.gdgtools.appengine
 
 
 // NOTE: Wait for kotlinx.serialization issues #188

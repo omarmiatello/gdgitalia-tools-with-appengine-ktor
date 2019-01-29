@@ -1,7 +1,7 @@
-package com.github.gdgitalia.tools
+package com.github.jacklt.gdgtools
 
-import com.github.gdgitalia.tools.appengine.AppEngineCache
-import com.github.gdgitalia.tools.data.FireDB
+import com.github.jacklt.gdgtools.appengine.AppEngineCache
+import com.github.jacklt.gdgtools.data.FireDB
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install

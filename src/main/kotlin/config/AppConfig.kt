@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.config
+package com.github.jacklt.gdgtools.config
 
 @DslMarker
 annotation class AppConfigMarker

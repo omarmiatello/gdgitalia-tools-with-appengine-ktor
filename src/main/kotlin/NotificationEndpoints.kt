@@ -1,9 +1,9 @@
-package com.github.gdgitalia.tools
+package com.github.jacklt.gdgtools
 
-import com.github.gdgitalia.tools.config.AppConfig
-import com.github.gdgitalia.tools.config.MyConfig
-import com.github.gdgitalia.tools.data.*
-import com.github.gdgitalia.tools.utils.*
+import com.github.jacklt.gdgtools.config.AppConfig
+import com.github.jacklt.gdgtools.config.MyConfig
+import com.github.jacklt.gdgtools.data.*
+import com.github.jacklt.gdgtools.utils.*
 import io.ktor.application.call
 import io.ktor.response.respondText
 import io.ktor.routing.Routing

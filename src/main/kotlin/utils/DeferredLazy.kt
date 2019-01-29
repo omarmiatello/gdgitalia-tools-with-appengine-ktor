@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.utils
+package com.github.jacklt.gdgtools.utils
 
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async

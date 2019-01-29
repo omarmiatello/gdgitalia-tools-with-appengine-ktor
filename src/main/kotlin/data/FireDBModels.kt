@@ -1,6 +1,6 @@
-package com.github.gdgitalia.tools.data
+package com.github.jacklt.gdgtools.data
 
-import com.github.gdgitalia.tools.utils.toSlug
+import com.github.jacklt.gdgtools.utils.toSlug
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 

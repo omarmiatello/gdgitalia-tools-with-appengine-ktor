@@ -1,13 +1,13 @@
-package com.github.gdgitalia.tools.appengine
+package com.github.jacklt.gdgtools.appengine
 
-import com.github.gdgitalia.tools.config.AppConfig
-import com.github.gdgitalia.tools.data.EventDao
-import com.github.gdgitalia.tools.data.GroupDao
-import com.github.gdgitalia.tools.data.findHashtags
-import com.github.gdgitalia.tools.utils.cleanGdgName
-import com.github.gdgitalia.tools.utils.formatFull
-import com.github.gdgitalia.tools.utils.parse
-import com.github.gdgitalia.tools.utils.toSlug
+import com.github.jacklt.gdgtools.config.AppConfig
+import com.github.jacklt.gdgtools.data.EventDao
+import com.github.jacklt.gdgtools.data.GroupDao
+import com.github.jacklt.gdgtools.data.findHashtags
+import com.github.jacklt.gdgtools.utils.cleanGdgName
+import com.github.jacklt.gdgtools.utils.formatFull
+import com.github.jacklt.gdgtools.utils.parse
+import com.github.jacklt.gdgtools.utils.toSlug
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory

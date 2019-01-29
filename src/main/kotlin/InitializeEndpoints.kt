@@ -1,7 +1,7 @@
-package com.github.gdgitalia.tools
+package com.github.jacklt.gdgtools
 
-import com.github.gdgitalia.tools.data.FireDB
-import com.github.gdgitalia.tools.data.SpeakerDao
+import com.github.jacklt.gdgtools.data.FireDB
+import com.github.jacklt.gdgtools.data.SpeakerDao
 import io.ktor.application.call
 import io.ktor.response.respondText
 import io.ktor.routing.Routing

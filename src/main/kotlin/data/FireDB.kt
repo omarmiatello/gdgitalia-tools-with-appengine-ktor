@@ -1,8 +1,8 @@
-package com.github.gdgitalia.tools.data
+package com.github.jacklt.gdgtools.data
 
-import com.github.gdgitalia.tools.appengine.FirebaseDatabaseApi
-import com.github.gdgitalia.tools.appengine.fireMap
-import com.github.gdgitalia.tools.utils.yearInt
+import com.github.jacklt.gdgtools.appengine.FirebaseDatabaseApi
+import com.github.jacklt.gdgtools.appengine.fireMap
+import com.github.jacklt.gdgtools.utils.yearInt
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.map
 import kotlinx.serialization.serializer

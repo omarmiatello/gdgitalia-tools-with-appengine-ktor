@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.utils
+package com.github.jacklt.gdgtools.utils
 
 import com.google.api.client.http.ByteArrayContent
 import com.google.api.client.http.HttpResponse

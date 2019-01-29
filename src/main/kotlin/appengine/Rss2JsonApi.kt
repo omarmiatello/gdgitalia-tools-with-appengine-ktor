@@ -1,10 +1,10 @@
-package com.github.gdgitalia.tools.appengine
+package com.github.jacklt.gdgtools.appengine
 
-import com.github.gdgitalia.tools.config.AppConfig
-import com.github.gdgitalia.tools.data.SlideDao
-import com.github.gdgitalia.tools.data.findHashtags
-import com.github.gdgitalia.tools.utils.parseNotNull
-import com.github.gdgitalia.tools.utils.toSlug
+import com.github.jacklt.gdgtools.config.AppConfig
+import com.github.jacklt.gdgtools.data.SlideDao
+import com.github.jacklt.gdgtools.data.findHashtags
+import com.github.jacklt.gdgtools.utils.parseNotNull
+import com.github.jacklt.gdgtools.utils.toSlug
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory

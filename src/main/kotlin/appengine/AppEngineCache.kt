@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.appengine
+package com.github.jacklt.gdgtools.appengine
 
 import com.google.appengine.api.memcache.Expiration
 import com.google.appengine.api.memcache.MemcacheServiceFactory

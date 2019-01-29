@@ -1,4 +1,4 @@
-package com.github.gdgitalia.tools.template
+package com.github.jacklt.gdgtools.template
 
 import io.ktor.html.*
 import kotlinx.html.*

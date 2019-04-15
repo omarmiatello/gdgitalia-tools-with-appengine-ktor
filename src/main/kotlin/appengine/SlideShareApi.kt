@@ -1,4 +1,4 @@
-package com.github.jacklt.gdgtools.appengine
+package com.github.omarmiatello.gdgtools.appengine
 
 object SlideShareApi {
     private val basePath = "https://www.slideshare.net"

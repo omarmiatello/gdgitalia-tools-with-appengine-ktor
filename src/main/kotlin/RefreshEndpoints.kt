@@ -1,14 +1,14 @@
-package com.github.jacklt.gdgtools
+package com.github.omarmiatello.gdgtools
 
-import com.github.jacklt.gdgtools.appengine.MeetupApi
-import com.github.jacklt.gdgtools.appengine.SlideShareApi
-import com.github.jacklt.gdgtools.appengine.SpeakerDeckApi
-import com.github.jacklt.gdgtools.data.FireDB
-import com.github.jacklt.gdgtools.data.GroupDao
-import com.github.jacklt.gdgtools.data.YearTagCounter
-import com.github.jacklt.gdgtools.data.knownTags
-import com.github.jacklt.gdgtools.utils.toJsonPretty
-import com.github.jacklt.gdgtools.utils.toSlug
+import com.github.omarmiatello.gdgtools.appengine.MeetupApi
+import com.github.omarmiatello.gdgtools.appengine.SlideShareApi
+import com.github.omarmiatello.gdgtools.appengine.SpeakerDeckApi
+import com.github.omarmiatello.gdgtools.data.FireDB
+import com.github.omarmiatello.gdgtools.data.GroupDao
+import com.github.omarmiatello.gdgtools.data.YearTagCounter
+import com.github.omarmiatello.gdgtools.data.knownTags
+import com.github.omarmiatello.gdgtools.utils.toJsonPretty
+import com.github.omarmiatello.gdgtools.utils.toSlug
 import io.ktor.application.call
 import io.ktor.response.respondText
 import io.ktor.routing.Routing

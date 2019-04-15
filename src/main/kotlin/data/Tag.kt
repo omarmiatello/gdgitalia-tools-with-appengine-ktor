@@ -1,7 +1,7 @@
-package com.github.jacklt.gdgtools.data
+package com.github.omarmiatello.gdgtools.data
 
-import com.github.jacklt.gdgtools.config.AppConfig
-import com.github.jacklt.gdgtools.utils.toSlug
+import com.github.omarmiatello.gdgtools.config.AppConfig
+import com.github.omarmiatello.gdgtools.utils.toSlug
 
 operator fun String.contains(tag: Tag): Boolean {
     return (listOf(tag.name) + tag.alias).firstOrNull { it in this } != null

@@ -1,4 +1,4 @@
-package com.github.jacklt.gdgtools.utils
+package com.github.omarmiatello.gdgtools.utils
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat

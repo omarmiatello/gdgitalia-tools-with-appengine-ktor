@@ -1,4 +1,4 @@
-package com.github.jacklt.gdgtools.config
+package com.github.omarmiatello.gdgtools.config
 
 object ExampleConfig : AppConfig() {
     init {

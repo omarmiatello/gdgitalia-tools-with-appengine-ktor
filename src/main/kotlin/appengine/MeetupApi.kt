@@ -1,13 +1,13 @@
-package com.github.jacklt.gdgtools.appengine
+package com.github.omarmiatello.gdgtools.appengine
 
-import com.github.jacklt.gdgtools.config.AppConfig
-import com.github.jacklt.gdgtools.data.EventDao
-import com.github.jacklt.gdgtools.data.GroupDao
-import com.github.jacklt.gdgtools.data.findHashtags
-import com.github.jacklt.gdgtools.utils.cleanGdgName
-import com.github.jacklt.gdgtools.utils.formatFull
-import com.github.jacklt.gdgtools.utils.parse
-import com.github.jacklt.gdgtools.utils.toSlug
+import com.github.omarmiatello.gdgtools.config.AppConfig
+import com.github.omarmiatello.gdgtools.data.EventDao
+import com.github.omarmiatello.gdgtools.data.GroupDao
+import com.github.omarmiatello.gdgtools.data.findHashtags
+import com.github.omarmiatello.gdgtools.utils.cleanGdgName
+import com.github.omarmiatello.gdgtools.utils.formatFull
+import com.github.omarmiatello.gdgtools.utils.parse
+import com.github.omarmiatello.gdgtools.utils.toSlug
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory

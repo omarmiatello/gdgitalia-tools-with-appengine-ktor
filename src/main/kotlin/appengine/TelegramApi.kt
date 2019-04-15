@@ -1,8 +1,8 @@
-package com.github.jacklt.gdgtools.appengine
+package com.github.omarmiatello.gdgtools.appengine
 
-import com.github.jacklt.gdgtools.config.AppConfig
-import com.github.jacklt.gdgtools.utils.parseNotNull
-import com.github.jacklt.gdgtools.utils.toJsonContentForTelegram
+import com.github.omarmiatello.gdgtools.config.AppConfig
+import com.github.omarmiatello.gdgtools.utils.parseNotNull
+import com.github.omarmiatello.gdgtools.utils.toJsonContentForTelegram
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory

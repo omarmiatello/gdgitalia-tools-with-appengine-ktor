@@ -1,8 +1,8 @@
 package notification
 
-import com.github.jacklt.gdgtools.appengine.TelegramApi
-import com.github.jacklt.gdgtools.data.FireDB
-import com.github.jacklt.gdgtools.data.MessageStatus
+import com.github.omarmiatello.gdgtools.appengine.TelegramApi
+import com.github.omarmiatello.gdgtools.data.FireDB
+import com.github.omarmiatello.gdgtools.data.MessageStatus
 import com.google.api.client.http.HttpResponseException
 
 class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10, val maxUpdate: Int = 10, val maxDelete: Int = 10) {

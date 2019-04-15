@@ -1,7 +1,7 @@
-package com.github.jacklt.gdgtools.appengine
+package com.github.omarmiatello.gdgtools.appengine
 
-import com.github.jacklt.gdgtools.utils.parse
-import com.github.jacklt.gdgtools.utils.toJsonContent
+import com.github.omarmiatello.gdgtools.utils.parse
+import com.github.omarmiatello.gdgtools.utils.toJsonContent
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.GenericUrl

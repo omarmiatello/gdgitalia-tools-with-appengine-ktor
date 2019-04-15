@@ -1,7 +1,7 @@
-package com.github.jacklt.gdgtools
+package com.github.omarmiatello.gdgtools
 
-import com.github.jacklt.gdgtools.appengine.MeetupApi
-import com.github.jacklt.gdgtools.utils.DeferredLazy
+import com.github.omarmiatello.gdgtools.appengine.MeetupApi
+import com.github.omarmiatello.gdgtools.utils.DeferredLazy
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.html.respondHtml

@@ -154,7 +154,7 @@ object MeetupApi {
         val name: String,
         val lat: Double,
         val lon: Double,
-        val address_1: String,
+        @Optional val address_1: String? = null,
         val city: String,
         val country: String,
         val localized_country_name: String

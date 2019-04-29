@@ -19,7 +19,7 @@ import kotlinx.serialization.list
 fun Routing.refresh() {
     route("refresh") {
         get("firebase/from/meetup") {
-            val meetupGroups = MeetupApi.findGroups("gdg").filter { it.country == "IT" }
+            val meetupGroups = MeetupApi.findGroups("gdg").filter { it.country == "IT" } + MeetupApi.findGroups("Google Cloud Developer Community").filter { it.country == "IT" }
             FireDB.allGroups = meetupGroups.map { it.toDao() }
             FireDB.meetupUrlnamesMap = meetupGroups.associateBy { it.gdgName.toSlug() }.mapValues { it.value.urlname }
             call.respondText(meetupGroups.map { it.toDao() }.toJsonPretty(GroupDao.serializer().list))

@@ -56,7 +56,7 @@ fun Application.main() {
                         div("container") {
                             h1("title") {
                                 +"Website ("
-                                a("https://github.com/jacklt/gdgitalia-tools-with-appengine-ktor") {
+                                a("https://github.com/omarmiatello/gdgitalia-tools-with-appengine-ktor") {
                                     +"source"
                                 }
                                 +")"
@@ -65,6 +65,7 @@ fun Application.main() {
                             p { a("/gdg/groups/gdg-milano") { +"groups/gdg-milano" } }
                             p { a("/gdg/tag") { +"tag" } }
                             p { a("/gdg/tag/devfest") { +"tag/devfest" } }
+                            p { a("/gdg/calendar/2019") { +"calendar/2019" } }
                             h1("title") { +"API" }
                             div("columns") {
                                 div("column") {

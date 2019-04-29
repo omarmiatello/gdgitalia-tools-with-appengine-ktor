@@ -196,6 +196,62 @@ fun Routing.gdg() {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
+
+        get("calendar/{year}") {
+            val yearParam = call.parameters["year"]!!.toInt()
+            val groupsMap = FireDB.groupsMap
+            val allEvents = FireDB.getAllEventByYear(yearParam).toEventResponseList()
+
+            call.respondHtml {
+                head { title { +"GDG Italia - Tools Project" } }
+                body {
+                    h1 { +"GDG Italia" }
+//                    p { a("groups.json") { +"groups.json" } }
+//                    p { a("groups_events.json") { +"groups_events.json" } }
+                    p { +"Ci sono ${allEvents.count()} eventi GDG nel $yearParam" }
+
+                    h3 { +"Eventi $yearParam" }
+                    p {
+                        allEvents
+                            .groupBy { it.dateString }
+                            .forEach { (dateString, events) ->
+                                h3 { +dateString }
+                                events.forEach { event ->
+                                    val group = groupsMap.getValue(event.groupSlug) //.toResponse(null)!!
+                                    p {
+                                        with(event) {
+                                            b { +name }
+                                            if (meetupLink != null) {
+                                                +" ("
+                                                a(meetupLink) { +"Link evento" }
+                                                +")"
+                                            }
+                                            if (!tags.isNullOrEmpty()) {
+                                                br
+                                                tags.forEach { tag ->
+                                                    a("/gdg/tag/${tag.slug}") { +tag.hashtag }
+                                                    +" "
+                                                }
+                                            }
+                                            br
+                                            a(group.meetupLink) { +group.name }
+                                            +" dalle $timeString - Durata: ${duration / 3600 / 1000f} ore"
+                                            if (venueName != null) {
+                                                br
+                                                +"Location: "
+                                                +"$venueName ($venueCity, $venueAddress - $venueCountry)"
+                                            }
+                                            br
+                                        }
+                                    }
+                                }
+                            }
+
+
+                    }
+                }
+            }
+        }
     }
 }
 

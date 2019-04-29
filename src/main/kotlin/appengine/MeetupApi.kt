@@ -11,6 +11,7 @@ import com.github.omarmiatello.gdgtools.utils.toSlug
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory
+import io.ktor.http.encodeURLQueryComponent
 import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -41,7 +42,7 @@ object MeetupApi {
         orderType: String = "distance",
         country: String = "IT"
     ) =
-        get("find/groups?country=$country&text=$query&radius=$radius&page=$limit&offset=$page&lat=$lat&lon=$lon&order=$orderType")
+        get("find/groups?country=$country&text=${query.encodeURLQueryComponent()}&radius=$radius&page=$limit&offset=$page&lat=$lat&lon=$lon&order=$orderType")
             .parse(MeetupGroup.serializer().list)
             .orEmpty()
 

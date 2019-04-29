@@ -11,6 +11,7 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import notification.TelegramHelper
 import java.util.*
+import kotlin.math.max
 
 private fun EventDao.telegramMessage(group: GroupDao, skipTags: List<Tag> = emptyList()): String {
     val skipLinks = skipTags.map { it.telegramLink }
@@ -134,7 +135,14 @@ fun Routing.notification() {
 
             val futureHelper = TelegramHelper(chatId, TelegramHelper.TYPE_NEXTWEEK_HELPER)
             val futureStatus = futureHelper.getMessageStatus("future")
-            val maxShowFutureEvents = 5
+
+            val maxShowFutureEvents = max(
+                5,
+                futureEvents.getOrNull(4)?.let {
+                    val lastDate = it.dateString
+                    futureEvents.indexOfLast { it.dateString == lastDate } + 1
+                } ?: 0
+            )
             val futureMsg = if (!futureEvents.isNullOrEmpty()) {
                 ("Prossimamente:\n" +
                         futureEvents.take(maxShowFutureEvents)

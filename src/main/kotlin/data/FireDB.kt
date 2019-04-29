@@ -53,6 +53,10 @@ object FireDB : FirebaseDatabaseApi() {
 
     // event
 
+    val allEvents: List<EventDao>
+        get() = eventsMap.values.flatMap { it.values }
+            .sortedBy { it.time }
+
     fun addEvents(events: List<EventDao>) = update(
         FireDB.KEY_EVENT,
         events
@@ -68,6 +72,9 @@ object FireDB : FirebaseDatabaseApi() {
         .flatMap { it.value.map { it.value }.filter { tag in it.tags.orEmpty() } }
         .sortedByDescending { it.time }
         .groupBy { Date(it.time).yearInt.toString() }
+
+    fun getAllEventByYear(year: Int) = allEvents
+        .filter { Date(it.time).yearInt == year }
 
     // speaker
 

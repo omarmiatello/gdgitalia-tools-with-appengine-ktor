@@ -20,7 +20,7 @@ fun Routing.test() {
             head { title { +"GDG Italia - Tools Project - Test" } }
             body {
                 h3 {
-                    a("/") { +call.request.host()!! }
+                    a("/") { +call.request.host() }
                     +call.request.uri
                 }
                 p { pre { +msg } }

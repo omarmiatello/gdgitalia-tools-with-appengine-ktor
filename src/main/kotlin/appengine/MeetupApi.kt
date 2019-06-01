@@ -12,7 +12,6 @@ import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory
 import io.ktor.http.encodeURLQueryComponent
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.list
@@ -72,8 +71,8 @@ object MeetupApi {
         val members: Int,
         val organizer: Organizer,
         val who: String,
-        @Optional val key_photo: Photo? = null,
-        @Optional val group_photo: Photo? = null
+        val key_photo: Photo? = null,
+        val group_photo: Photo? = null
     ) {
         @Transient
         val gdgName = name.cleanGdgName()
@@ -102,22 +101,22 @@ object MeetupApi {
     @Serializable
     data class MeetupEvent(
         val created: Long,
-        @Optional val duration: Long = 0,
+        val duration: Long = 0,
         val name: String,
-        @Optional val rsvp_limit: Int = 0,
+        val rsvp_limit: Int = 0,
         val time: Long,
         val local_date: String,
         val local_time: String,
-        @Optional val rsvp_close_offset: String? = null,
+        val rsvp_close_offset: String? = null,
         val updated: Long,
         val waitlist_count: Int,
         val yes_rsvp_count: Int,
-        @Optional val venue: Venue? = null,
+        val venue: Venue? = null,
         val group: EventGroup,
         val link: String,
-        @Optional val manual_attendance_count: Int = 0,
-        @Optional val description: String? = null,
-        @Optional val rsvp_open_offset: String? = null
+        val manual_attendance_count: Int = 0,
+        val description: String? = null,
+        val rsvp_open_offset: String? = null
     ) {
         fun toDao() = EventDao(
             slug = "$local_date $name".toSlug(),
@@ -155,7 +154,7 @@ object MeetupApi {
         val name: String,
         val lat: Double,
         val lon: Double,
-        @Optional val address_1: String? = null,
+        val address_1: String? = null,
         val city: String,
         val country: String,
         val localized_country_name: String
@@ -163,7 +162,7 @@ object MeetupApi {
 
     @Serializable
     data class Photo(
-        @Optional val highres_link: String? = null,
+        val highres_link: String? = null,
         val photo_link: String,
         val thumb_link: String,
         val type: String,
@@ -174,6 +173,6 @@ object MeetupApi {
     data class Organizer(
         val name: String,
         val bio: String,
-        @Optional val photo: Photo? = null
+        val photo: Photo? = null
     )
 }

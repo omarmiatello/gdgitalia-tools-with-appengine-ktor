@@ -6,7 +6,6 @@ import com.github.omarmiatello.gdgtools.utils.toJsonContentForTelegram
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.serializer
 
@@ -104,10 +103,10 @@ object TelegramApi {
     data class MessageRequest(
         val chat_id: String,
         val text: String,
-        @Optional val parse_mode: String? = null,
-        @Optional val disable_web_page_preview: Boolean? = null,
-        @Optional val message_id: Int? = null,
-        @Optional val reply_markup: InlineKeyboardMarkup? = null
+        val parse_mode: String? = null,
+        val disable_web_page_preview: Boolean? = null,
+        val message_id: Int? = null,
+        val reply_markup: InlineKeyboardMarkup? = null
     )
 
     @Serializable
@@ -115,7 +114,7 @@ object TelegramApi {
         val chat_id: String,
         val from_chat_id: String,
         val message_id: Int,
-        @Optional val disable_notification: Boolean? = null
+        val disable_notification: Boolean? = null
     )
 
     @Serializable

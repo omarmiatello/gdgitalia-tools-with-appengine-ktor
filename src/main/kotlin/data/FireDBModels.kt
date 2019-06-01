@@ -1,7 +1,6 @@
 package com.github.omarmiatello.gdgtools.data
 
 import com.github.omarmiatello.gdgtools.utils.toSlug
-import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 typealias YearCounter = Map<String, Int>
@@ -14,17 +13,17 @@ data class GroupDao(
     val name: String,
     val membersCount: Int,
     val membersName: String,
-    @Optional val description: String? = null,
-    @Optional val lat: Double? = null,
-    @Optional val lon: Double? = null,
-    @Optional val region: String? = null,
-    @Optional val created: Long? = null,
-    @Optional val city: String? = null,
-    @Optional val country: String? = null,
-    @Optional val meetupLink: String? = null,
-    @Optional val logoImageUrl: String? = null,
-    @Optional val backgroundImageUrl: String? = null,
-    @Optional val tags: YearTagCounter? = null
+    val description: String? = null,
+    val lat: Double? = null,
+    val lon: Double? = null,
+    val region: String? = null,
+    val created: Long? = null,
+    val city: String? = null,
+    val country: String? = null,
+    val meetupLink: String? = null,
+    val logoImageUrl: String? = null,
+    val backgroundImageUrl: String? = null,
+    val tags: YearTagCounter? = null
 )
 
 @Serializable
@@ -32,8 +31,8 @@ data class EventDao(
     val slug: String,
     val groupSlug: String,
     val name: String,
-    @Optional val description: String? = null,
-    @Optional val tags: String? = null,
+    val description: String? = null,
+    val tags: String? = null,
     val dateString: String,
     val timeString: String,
     val created: Long,
@@ -44,27 +43,28 @@ data class EventDao(
     val attendeeRsvpLimit: Int,
     val attendeeWaitlistCount: Int,
     val attendeeManualCount: Int,
-    @Optional val venueName: String? = null,
-    @Optional val venueLon: Double? = null,
-    @Optional val venueLat: Double? = null,
-    @Optional val venueCountry: String? = null,
-    @Optional val venueCity: String? = null,
-    @Optional val venueAddress: String? = null,
-    @Optional val meetupLink: String? = null
+    val venueName: String? = null,
+    val venueLon: Double? = null,
+    val venueLat: Double? = null,
+    val venueCountry: String? = null,
+    val venueCity: String? = null,
+    val venueAddress: String? = null,
+    val meetupLink: String? = null
 ) {
     fun getTagList() = tags?.takeIf { it.isNotEmpty() }
         ?.split(" ")
-        ?.map { knownTagsByHashtag[it]!! }
+        ?.map { knownTagsByHashtag.getValue(it) }
 }
 
 @Serializable
 data class SpeakerDao(
     val name: String,
-    @Optional val speakerDeckId: String? = null,
-    @Optional val slideShareId: String? = null,
-    val slug: String = name.toSlug(),
-    @Optional val tags: YearTagCounter? = null
-)
+    val speakerDeckId: String? = null,
+    val slideShareId: String? = null,
+    val tags: YearTagCounter? = null
+) {
+    val slug: String = name.toSlug()
+}
 
 @Serializable
 data class SlideDao(
@@ -75,12 +75,12 @@ data class SlideDao(
     val link: String,
     val speakerSlug: String,
     val author: String,
-    @Optional val image: String? = null,
-    @Optional val tags: String? = null
+    val image: String? = null,
+    val tags: String? = null
 ) {
     fun getTagList() = tags?.takeIf { it.isNotEmpty() }
         ?.split(" ")
-        ?.map { knownTagsByHashtag[it]!! }
+        ?.map { knownTagsByHashtag.getValue(it) }
 }
 
 @Serializable
@@ -88,8 +88,8 @@ class TagDao(
     val name: String,
     val hashtag: String,
     val slug: String,
-    @Optional val group: Map<String, YearCounter>? = null,
-    @Optional val event: Map<String, List<String>>? = null,
-    @Optional val speaker: Map<String, YearCounter>? = null,
-    @Optional val slide: Map<String, List<String>>? = null
+    val group: Map<String, YearCounter>? = null,
+    val event: Map<String, List<String>>? = null,
+    val speaker: Map<String, YearCounter>? = null,
+    val slide: Map<String, List<String>>? = null
 )

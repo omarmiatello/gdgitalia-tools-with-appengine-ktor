@@ -6,27 +6,33 @@ import com.google.api.client.http.HttpResponseException
 import com.google.gson.Gson
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.JSON
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.typeTokenOf
 
+@UnstableDefault
 fun <T> T.toJsonContent(serializer: SerializationStrategy<T>) =
-    ByteArrayContent("application/json", JSON.plain.stringify(serializer, this).toByteArray())
+    ByteArrayContent("application/json", Json.plain.stringify(serializer, this).toByteArray())
 
-fun <T> T.toJsonPretty(serializer: SerializationStrategy<T>): String = JSON.indented.stringify(serializer, this)
+@UnstableDefault
+fun <T> T.toJsonPretty(serializer: SerializationStrategy<T>): String = Json.indented.stringify(serializer, this)
 
+@UnstableDefault
 inline fun <reified T> HttpResponse.parse(serializer: DeserializationStrategy<T>): T? {
     if (isSuccessStatusCode) {
         return parseAsString()
             .takeIf { it != "null" }
-            ?.let { JSON.nonstrict.parse(serializer, it) }
+            ?.let { Json.nonstrict.parse(serializer, it) }
     } else {
         throw HttpResponseException(this)
     }
 }
 
+@UnstableDefault
 inline fun <reified T> HttpResponse.parseNotNull(serializer: DeserializationStrategy<T>): T {
     if (isSuccessStatusCode) {
-        return JSON.nonstrict.parse(serializer, parseAsString())
+        return Json.nonstrict.parse(serializer, parseAsString())
     } else {
         throw HttpResponseException(this)
     }

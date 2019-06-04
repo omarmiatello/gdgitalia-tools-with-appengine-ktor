@@ -172,12 +172,13 @@ fun Routing.notification() {
                 val telegram = TelegramHelper(chatId, TelegramHelper.TYPE_NEXTWEEK).apply { send(listOf(msg)) }
 
                 val telegrams = listOfNotNull(
-                    telegram,
-                    // forward message
-                    telegram.idsMsgSends.firstOrNull()?.let { msgId ->
-                        TelegramHelper(MyConfig.CHAT_gdgitalia, TelegramHelper.TYPE_FORWARD)
-                            .apply { forward(listOf(chatId to msgId)) }
-                    }
+                    telegram
+//                    ,
+//                    // forward message // Removed for a new feature
+//                    telegram.idsMsgSends.firstOrNull()?.let { msgId ->
+//                        TelegramHelper(MyConfig.CHAT_gdgitalia, TelegramHelper.TYPE_FORWARD)
+//                            .apply { forward(listOf(chatId to msgId)) }
+//                    }
                 )
 
                 val showResult = call.parameters["show"] == "1"

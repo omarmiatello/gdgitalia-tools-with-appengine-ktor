@@ -10,35 +10,35 @@ object ExampleConfig : AppConfig() {
 
             // chatId: Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 
-            chatId_all_events = ""
+            chatId_all_events = "@gdgeventi"
 
             tag_chatId_map = mapOf(
                 "google-io" to "@community_gdgitalia",
-                "devfest" to "",
-                "aperitech" to "",
-                "hash-code" to "",
-                "team-building" to "",
-                "codelab" to "",
-                "viewing-party" to "",
-                "study-jam" to "",
-                "women-techmakers" to "",
-                "community" to "",
-                "android" to "",
-                "assistant" to "",
-                "kotlin" to "",
-                "firebase" to "",
-                "flutter" to "",
-                "web" to "",
-                "progressive-web-app" to "",
-                "google-cloud" to "",
-                "app-engine" to "",
-                "cloud-next" to "",
-                "container" to "",
-                "chrome" to "",
-                "machine-learning" to "",
-                "augmented-reality" to "",
-                "iot" to "",
-                "javascript" to ""
+                "devfest" to "@community_gdgitalia",
+                "aperitech" to "@community_gdgitalia",
+                "hash-code" to "@community_gdgitalia",
+                "team-building" to "@community_gdgitalia",
+                "codelab" to "@community_gdgitalia",
+                "viewing-party" to "@community_gdgitalia",
+                "study-jam" to "@community_gdgitalia",
+                "women-techmakers" to "@community_gdgitalia",
+                "community" to "@community_gdgitalia",
+                "android" to "@app_gdgitalia",
+                "assistant" to "@ai_gdgitalia",
+                "kotlin" to "@app_gdgitalia",
+                "firebase" to "@app_gdgitalia",
+                "flutter" to "@app_gdgitalia",
+                "web" to "@web_gdgitalia",
+                "progressive-web-app" to "@web_gdgitalia",
+                "google-cloud" to "@web_gdgitalia",
+                "app-engine" to "@web_gdgitalia",
+                "cloud-next" to "@web_gdgitalia",
+                "container" to "@web_gdgitalia",
+                "chrome" to "@web_gdgitalia",
+                "machine-learning" to "@ai_gdgitalia",
+                "augmented-reality" to "@ai_gdgitalia",
+                "iot" to "@ai_gdgitalia",
+                "javascript" to "@web_gdgitalia"
             )
 
             chatId_name_map = mapOf(

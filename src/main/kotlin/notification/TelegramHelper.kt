@@ -69,24 +69,35 @@ class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10,
         }
     }
 
-    fun deleteIf(predicate: (Map.Entry<String, MessageStatus>) -> Boolean) {
+    fun deleteIf(skipIfError: Boolean = true, predicate: (Map.Entry<String, MessageStatus>) -> Boolean) {
         var countDeleted = 0
         val deletedNotification = telegramNotification.filter(predicate)
         deletedNotification.forEach { (slug, messageStatus) ->
             if (messageStatus.hash != "deleted" && countDeleted++ < maxDelete) {
+                var isDeleted = true
                 try {
                     val status = TelegramApi.deleteMessage(chatId, messageStatus.id).result
                     response.appendln("DELETED (deleteMessage) [$status] $slug")
                 } catch (e: HttpResponseException) {
-                    // BOT limit: After 48h message can't be deleted
-                    // {"ok":false,"error_code":400,"description":"Bad Request: message can't be deleted"}
-                    val messageId = TelegramApi.editMessageText(
-                        chatId = chatId, messageId = messageStatus.id,
-                        text = "Evento spostato o eliminato"
-                    ).result.message_id
-                    response.appendln("DELETED (editMessageText) [$messageId] $slug")
+                    try {
+                        // BOT limit: After 48h message can't be deleted
+                        // {"ok":false,"error_code":400,"description":"Bad Request: message can't be deleted"}
+                        val messageId = TelegramApi.editMessageText(
+                            chatId = chatId, messageId = messageStatus.id,
+                            text = "Evento spostato o eliminato"
+                        ).result.message_id
+                        response.appendln("DELETED (editMessageText) [$messageId] $slug")
+                    } catch (e: HttpResponseException) {
+                        // message remove from other admin (or bot)
+                        isDeleted = skipIfError
+                        if (isDeleted) {
+                            response.appendln("DELETED (editMessageText) [already deleted] $slug")
+                        }
+                    }
                 }
-                saveMessageStatus(slug, MessageStatus(messageStatus.id, "deleted"))
+                if (isDeleted) {
+                    saveMessageStatus(slug, MessageStatus(messageStatus.id, "deleted"))
+                }
             }
         }
     }

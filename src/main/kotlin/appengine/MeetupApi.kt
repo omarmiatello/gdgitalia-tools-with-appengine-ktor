@@ -10,7 +10,9 @@ import com.github.omarmiatello.gdgtools.utils.parse
 import com.github.omarmiatello.gdgtools.utils.toSlug
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport
 import com.google.api.client.http.GenericUrl
+import com.google.api.client.http.HttpHeaders
 import com.google.api.client.http.HttpRequestFactory
+import com.google.api.client.http.UrlEncodedContent
 import io.ktor.http.encodeURLQueryComponent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -19,16 +21,28 @@ import java.util.*
 
 // https://www.meetup.com/it-IT/meetup_api/
 
+
 object MeetupApi {
     private val config = AppConfig.getDefault().meetup
     private val basePath = "https://api.meetup.com"
-    private val sign = "sign=true&key=${config.apiKey}"
+
+    private val accessToken by lazy {
+        // val logger = Logger.getLogger(MeetupApi::class.java.name)
+        // fun log(msg: String) = logger.log(Level.INFO, msg)
+        // Authentication.authorize().also { log("accessToken ${it.parseAsString()}")  }
+        // Authentication.access().also { log("accessToken ${it.parseAsString()}") }
+
+        Authentication.refreshToken()
+            .parse(Authentication.OAuthResponse.serializer())!!
+            .access_token
+    }
 
     private val httpTransport = UrlFetchTransport.getDefaultInstance()
     private fun requestFactory(): HttpRequestFactory = httpTransport.createRequestFactory()
 
     private fun get(methodPath: String) = requestFactory()
-        .buildGetRequest(GenericUrl("$basePath/$methodPath" + (if ("?" in methodPath) "&" else "?") + sign))
+        .buildGetRequest(GenericUrl("$basePath/$methodPath"))
+        .setHeaders(HttpHeaders().setAuthorization("Bearer $accessToken"))
         .execute()
 
     fun findGroups(
@@ -55,7 +69,6 @@ object MeetupApi {
 
 
     // Build with help of https://app.quicktype.io
-
 
     @Serializable
     data class MeetupGroup(
@@ -175,4 +188,38 @@ object MeetupApi {
         val bio: String,
         val photo: Photo? = null
     )
+
+    // Authentication OAuth2 - https://www.meetup.com/it-IT/meetup_api/auth/#oauth2
+    object Authentication {
+        @Serializable
+        data class OAuthResponse(val access_token: String)
+
+        fun authorize() = requestFactory()
+                .buildGetRequest(GenericUrl(
+                    "https://secure.meetup.com/oauth2/authorize?client_id=${config.oauthClientId}" +
+                    "&response_type=code&redirect_uri=${config.oauthRedirect}"
+                ))
+                .execute()
+
+        fun access(clientCode: String)=  requestFactory()
+                .buildPostRequest(GenericUrl(
+                    "https://secure.meetup.com/oauth2/access"
+                ), UrlEncodedContent(mapOf("client_id" to config.oauthClientId,
+                        "client_secret" to config.oauthClientSecret ,
+                        "grant_type" to "authorization_code",
+                        "redirect_uri" to config.oauthRedirect,
+                        "code" to clientCode)
+                ))
+                .execute()
+
+        fun refreshToken(refreshToken: String = config.oauthClientRefreshToken) = requestFactory()
+                .buildPostRequest(GenericUrl(
+                    "https://secure.meetup.com/oauth2/access"
+                ), UrlEncodedContent(mapOf("client_id" to config.oauthClientId,
+                        "client_secret" to config.oauthClientSecret ,
+                        "grant_type" to "refresh_token",
+                        "refresh_token" to refreshToken)
+                ))
+                .execute()
+    }
 }

@@ -3,7 +3,10 @@ package com.github.omarmiatello.gdgtools.config
 object ExampleConfig : AppConfig() {
     init {
         meetup {
-            apiKey = ""
+            oauthClientId = ""
+            oauthClientSecret = ""
+            oauthClientRefreshToken = ""
+            oauthRedirect = ""
         }
         telegram {
             apiKey = ""

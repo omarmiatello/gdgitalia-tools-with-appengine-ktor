@@ -28,7 +28,10 @@ abstract class AppConfig {
 
 @AppConfigMarker
 class MEETUP {
-    var apiKey: String = ""
+    var oauthClientId: String = ""
+    var oauthClientSecret: String = ""
+    var oauthClientRefreshToken: String = ""
+    var oauthRedirect: String = ""
 }
 
 @AppConfigMarker

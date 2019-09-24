@@ -20,7 +20,10 @@ private fun EventDao.telegramMessage(group: GroupDao, skipTags: List<Tag> = empt
         .map { "[${it.channelName}](${it.telegramLink})" }
         .distinct()
         .joinToString(", ")
-    val venue = if (!venueName.isNullOrEmpty()) "*$venueName* ($venueAddress, $venueCity)" else null
+    val venue = if (!venueName.isNullOrEmpty()) {
+        val address = listOfNotNull(venueAddress, venueCity).joinToString(", ")
+        if (address.isNotEmpty()) "*$venueName* ($address)" else "*$venueName*"
+    } else null
     val tag = tags?.takeIf { it.isNotEmpty() }
     val channel = if (channels.isNotEmpty()) "Canali: $channels" else null
     val footer = listOfNotNull(venue, tag, channel).joinToString("\n|").let { if (it.isNotEmpty()) "\n|$it" else it }

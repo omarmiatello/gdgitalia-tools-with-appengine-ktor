@@ -54,7 +54,7 @@ object Rss2JsonApi {
     ) {
         fun toSlideDao(speakerSlug: String) = SlideDao(
             slug = title.toSlug(),
-            name = title,
+            name = title.htmlToTelegramMarkdown(),
             description = content,
             pubDate = pubDate,
             link = link,

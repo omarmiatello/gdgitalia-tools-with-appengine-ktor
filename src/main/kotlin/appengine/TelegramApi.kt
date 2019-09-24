@@ -148,7 +148,7 @@ fun String.htmlToTelegramMarkdown() =
         .replace("&gt;", ">")
         .replace("&lt;", "<")
         .replace("&amp;", "&")
-        .replace("&quot;;", "'")
+        .replace("&quot;", "'")
         .replace("<h\\d>".toRegex(), "*")
         .replace("</h\\d>".toRegex(), "*\n")
         .replace("<.*?>".toRegex(), "")

@@ -216,13 +216,13 @@ fun Routing.gdg() {
                 head { title { +"GDG Italia - Tools Project" } }
                 body {
                     h1 { +"GDG Italia" }
-//                    p { a("groups.json") { +"groups.json" } }
-//                    p { a("groups_events.json") { +"groups_events.json" } }
+                    p { a("$yearParam.json") { +"$yearParam.json" } }
                     p { +"Ci sono ${allEvents.count()} eventi GDG nel $yearParam" }
 
                     h3 { +"Eventi $yearParam" }
                     p {
                         allEvents
+                            .reversed()
                             .groupBy { it.dateString }
                             .forEach { (dateString, events) ->
                                 h3 { +dateString }
@@ -309,7 +309,9 @@ private fun EventResponse.toHtml(showEventDescription: Boolean) = object : Templ
             if (venueName != null) {
                 br
                 +"Location: "
-                +"$venueName ($venueCity, $venueAddress - $venueCountry)"
+                +venueName
+                val address = listOfNotNull(venueAddress, venueCity).joinToString(", ")
+                if (address.isNotEmpty()) +" ($address)"
             }
             br
             +"Iscritti: $attendeeRsvpYesCount"

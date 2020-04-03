@@ -165,12 +165,12 @@ object MeetupApi {
     @Serializable
     data class Venue(
         val name: String,
-        val lat: Double,
-        val lon: Double,
+        val lat: Double? = null,
+        val lon: Double? = null,
         val address_1: String? = null,
-        val city: String,
-        val country: String,
-        val localized_country_name: String
+        val city: String? = null,
+        val country: String? = null,
+        val localized_country_name: String? = null
     )
 
     @Serializable

@@ -65,7 +65,7 @@ fun Application.main() {
                             p { a("/gdg/groups/gdg-milano") { +"groups/gdg-milano" } }
                             p { a("/gdg/tag") { +"tag" } }
                             p { a("/gdg/tag/devfest") { +"tag/devfest" } }
-                            p { a("/gdg/calendar/2019") { +"calendar/2019" } }
+                            p { a("/gdg/calendar/2020") { +"calendar/2020" } }
                             h1("title") { +"API" }
                             div("columns") {
                                 div("column") {

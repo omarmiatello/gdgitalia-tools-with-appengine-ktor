@@ -197,6 +197,16 @@ fun Routing.gdg() {
             }
         }
 
+        get("calendar/{year}.json") {
+            cacheUriOr {
+                val yearParam = call.parameters["year"]!!.toInt()
+                val allEvents = FireDB.getAllEventByYear(yearParam).toEventResponseList()
+                allEvents.toJsonPretty(EventResponse.serializer().list)
+            }.also {
+                if (it.isEmpty()) call.respond(HttpStatusCode.NotFound) else call.respondText(it)
+            }
+        }
+
         get("calendar/{year}") {
             val yearParam = call.parameters["year"]!!.toInt()
             val groupsMap = FireDB.groupsMap

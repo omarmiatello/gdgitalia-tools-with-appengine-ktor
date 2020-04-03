@@ -1,7 +1,6 @@
 package com.github.omarmiatello.gdgtools
 
 import com.github.omarmiatello.gdgtools.config.AppConfig
-import com.github.omarmiatello.gdgtools.config.MyConfig
 import com.github.omarmiatello.gdgtools.data.*
 import com.github.omarmiatello.gdgtools.utils.*
 import io.ktor.application.call
@@ -74,9 +73,11 @@ fun Routing.notification() {
                             .sortedBy { it.second }
 
                         val msgs = events.map { (key1, key2) ->
+                            val event = eventsMap.getValue(key1).getValue(key2)
+                            val group = groupsMap.getValue(key1)
                             TelegramHelper.Message(
                                 slug = "${key1}_$key2",
-                                text = eventsMap[key1]!![key2]!!.telegramMessage(groupsMap[key1]!!, skipTags = tags)
+                                text = event.telegramMessage(group, skipTags = tags)
                             )
                         }
 

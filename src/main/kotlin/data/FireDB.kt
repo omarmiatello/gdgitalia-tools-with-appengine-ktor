@@ -18,6 +18,7 @@ object FireDB : FirebaseDatabaseApi() {
     private val KEY_SLIDE = "slide"
     private val KEY_TAG = "tag"
     private val KEY_TELEGRAM_MESSAGE = "telegram-message"
+    private val KEY_SLACK_MESSAGE = "slack-message"
 
     private val SERIALIZER_STRING_STRING = MapSerializer(String.serializer(), String.serializer())
     private val SERIALIZER_SLUG_GROUP = MapSerializer(String.serializer(), GroupDao.serializer())
@@ -139,6 +140,15 @@ object FireDB : FirebaseDatabaseApi() {
 
     fun deleteTelegramMessageStatus(chatId: String, type: String, slug: String) =
         deletePath("$KEY_TELEGRAM_MESSAGE/$chatId/$type/$slug")
+
+    // slack message (status)
+
+    fun addSlackMessageStatus(chatId: String, type: String, slug: String, status: MessageStatus) {
+        this["$KEY_SLACK_MESSAGE/$chatId/$type/$slug", MessageStatus.serializer()] = status
+    }
+
+    fun getSlackMessageStatusByType(chatId: String, type: String): Map<String, MessageStatus> =
+        this["$KEY_SLACK_MESSAGE/$chatId/$type", SERIALIZER_SLUG_TELEGRAMSTATUS].orEmpty()
 
 }
 

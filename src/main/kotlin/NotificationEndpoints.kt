@@ -2,6 +2,7 @@ package com.github.omarmiatello.gdgtools
 
 import com.github.omarmiatello.gdgtools.config.AppConfig
 import com.github.omarmiatello.gdgtools.data.*
+import com.github.omarmiatello.gdgtools.notification.SlackHelper
 import com.github.omarmiatello.gdgtools.utils.*
 import io.ktor.application.call
 import io.ktor.response.respondText
@@ -47,6 +48,7 @@ private fun SlideDao.telegramMessage(speaker: SpeakerDao, skipChannels: List<Tag
 
 fun Routing.notification() {
     val telegramConfig = AppConfig.getDefault().telegram
+    val slackConfig = AppConfig.getDefault().slack
 
     route("notification") {
         get("telegram/bychannel") {
@@ -187,6 +189,79 @@ fun Routing.notification() {
 
                 val showResult = call.parameters["show"] == "1"
                 call.respondText { if (showResult) telegrams.joinToString("\n") { it.response } else "OK" }
+            } else {
+                call.respondText("OK")
+            }
+        }
+        get("slack/nextweek") {
+            // val chatId = slackConfig.chatId_all_events
+            val groupsMap = FireDB.groupsMap
+            val eventsMap = FireDB.eventsMap
+
+            val (start, end) = weekRangeFrom { add(Calendar.HOUR, 36) }
+
+            val events = eventsMap.values
+                .flatMap { it.values }
+                .filter { Date(it.time).after(start.time) }
+                .sortedBy { it.time }
+
+            val (nextEvents, futureEvents) = events.partition { Date(it.time).before(end.time) }
+
+            val nextMsg = if (!nextEvents.isNullOrEmpty()) {
+                "Week ${end.weekOfYear} (${start.time.formatFull()} - ${end.time.formatFull()})\n" +
+                        nextEvents.joinToString("\n\n") { it.telegramMessage(groupsMap[it.groupSlug]!!) }
+            } else null
+
+            val futureHelper = SlackHelper("chatId", SlackHelper.TYPE_NEXTWEEK_HELPER)
+            val futureStatus = futureHelper.getMessageStatus("future")
+
+            val maxShowFutureEvents = max(
+                5,
+                futureEvents.getOrNull(4)?.let {
+                    val lastDate = it.dateString
+                    futureEvents.indexOfLast { it.dateString == lastDate } + 1
+                } ?: 0
+            )
+            val futureMsg = if (!futureEvents.isNullOrEmpty()) {
+                ("Prossimamente:\n" +
+                        futureEvents.take(maxShowFutureEvents)
+                            .joinToString("\n") {
+                                val group = groupsMap[it.groupSlug]!!
+                                val date = Date(it.time)
+                                "*${date.formatDayMonth()}* ${group.name}: [🎟 ${it.name}](${it.meetupLink})"
+                            } +
+                        (futureEvents
+                            .drop(maxShowFutureEvents)
+                            .takeIf { it.isNotEmpty() }
+                            ?.let { "\n+ altri ${it.count()} eventi (da: ${it.map { groupsMap[it.groupSlug]!!.name }.distinct().joinToString()})" }
+                            ?: "")
+                        )
+                    .takeIf { nextMsg != null || SlackHelper.toSlackHash(it) != futureStatus?.hash }
+            } else null
+
+            val text = listOfNotNull(nextMsg, futureMsg).joinToString("\n\n")
+
+            if (text.isNotEmpty()) {
+                val msg = SlackHelper.Message("${end.year}-week${end.weekOfYear}", text)
+
+                if (futureMsg != null) {
+                    futureHelper.saveMessageStatus("future", MessageStatus(0, SlackHelper.toSlackHash(futureMsg)))
+                }
+
+                val slack = SlackHelper("chatId", SlackHelper.TYPE_NEXTWEEK).apply { send(listOf(msg)) }
+
+                val slacks = listOfNotNull(
+                    slack
+//                    ,
+//                    // forward message // Removed for a new feature
+//                    telegram.idsMsgSends.firstOrNull()?.let { msgId ->
+//                        TelegramHelper(MyConfig.CHAT_gdgitalia, TelegramHelper.TYPE_FORWARD)
+//                            .apply { forward(listOf(chatId to msgId)) }
+//                    }
+                )
+
+                val showResult = call.parameters["show"] == "1"
+                call.respondText { if (showResult) slacks.joinToString("\n") { it.response } else "OK" }
             } else {
                 call.respondText("OK")
             }

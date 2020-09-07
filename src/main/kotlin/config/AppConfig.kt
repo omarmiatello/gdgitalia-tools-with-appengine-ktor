@@ -8,6 +8,7 @@ abstract class AppConfig {
     val meetup = MEETUP()
     val telegram = TELEGRAM()
     val rss2json = RSS2JSON()
+    val slack = SLACK()
 
     fun meetup(conf: MEETUP.() -> Unit) {
         meetup.conf()
@@ -19,6 +20,10 @@ abstract class AppConfig {
 
     fun rss2json(conf: RSS2JSON.() -> Unit) {
         rss2json.conf()
+    }
+
+    fun slack(conf: SLACK.() -> Unit) {
+        slack.conf()
     }
 
     companion object {
@@ -50,4 +55,9 @@ class TELEGRAM {
 @AppConfigMarker
 class RSS2JSON {
     var apiKey: String = ""
+}
+
+@AppConfigMarker
+class SLACK {
+    var webhook: String = ""
 }

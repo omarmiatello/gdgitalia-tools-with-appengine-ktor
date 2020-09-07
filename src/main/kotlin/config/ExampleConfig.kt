@@ -54,5 +54,8 @@ object ExampleConfig : AppConfig() {
         rss2json {
             apiKey = ""
         }
+        slack {
+            webhook = ""
+        }
     }
 }

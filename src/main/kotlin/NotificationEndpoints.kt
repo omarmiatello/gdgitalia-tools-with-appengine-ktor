@@ -32,6 +32,25 @@ private fun EventDao.telegramMessage(group: GroupDao, skipTags: List<Tag> = empt
 //                            |${description.orEmpty().htmlToTelegramMarkdown()}
 }
 
+private fun EventDao.slackMessage(group: GroupDao, skipTags: List<Tag> = emptyList()): String {
+    val skipLinks = skipTags.map { it.telegramLink }
+    val channels = getTagList().orEmpty()
+        .filter { it.telegramLink != null && it.telegramLink !in skipLinks }
+        .map { "[${it.channelName}](${it.telegramLink})" }
+        .distinct()
+        .joinToString(", ")
+    val venue = if (!venueName.isNullOrEmpty()) {
+        val address = listOfNotNull(venueAddress, venueCity).joinToString(", ")
+        if (address.isNotEmpty()) "*$venueName* ($address)" else "*$venueName*"
+    } else null
+    val tag = tags?.takeIf { it.isNotEmpty() }
+    val channel = if (channels.isNotEmpty()) "Canali: $channels" else null
+    val footer = listOfNotNull(venue, tag, channel).joinToString("\n|").let { if (it.isNotEmpty()) "\n|$it" else it }
+    return """${group.name}: <$meetupLink|🎟 $name>
+            |*$dateString* dalle $timeString$footer""".trimMargin()
+//                            |${description.orEmpty().htmlToTelegramMarkdown()}
+}
+
 private fun SlideDao.telegramMessage(speaker: SpeakerDao, skipChannels: List<Tag> = emptyList()): String {
     val skipLinks = skipChannels.map { it.telegramLink }
     val channels = getTagList().orEmpty()
@@ -209,7 +228,7 @@ fun Routing.notification() {
 
             val nextMsg = if (!nextEvents.isNullOrEmpty()) {
                 "Week ${end.weekOfYear} (${start.time.formatFull()} - ${end.time.formatFull()})\n" +
-                        nextEvents.joinToString("\n\n") { it.telegramMessage(groupsMap[it.groupSlug]!!) }
+                        nextEvents.joinToString("\n\n") { it.slackMessage(groupsMap[it.groupSlug]!!) }
             } else null
 
             val futureHelper = SlackHelper("chatId", SlackHelper.TYPE_NEXTWEEK_HELPER)
@@ -228,7 +247,7 @@ fun Routing.notification() {
                             .joinToString("\n") {
                                 val group = groupsMap[it.groupSlug]!!
                                 val date = Date(it.time)
-                                "*${date.formatDayMonth()}* ${group.name}: [🎟 ${it.name}](${it.meetupLink})"
+                                "*${date.formatDayMonth()}* ${group.name}: <${it.meetupLink}|🎟 ${it.name}>"
                             } +
                         (futureEvents
                             .drop(maxShowFutureEvents)

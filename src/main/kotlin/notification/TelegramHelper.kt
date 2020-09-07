@@ -28,7 +28,11 @@ class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10,
                             //button = listOf(listOf(InlineKeyboardButton("Meetup", event.meetupLink!!)))
                         ).result.message_id
                         idsMsgSends += messageId
-                        response.appendln("NEW $chatId/$type/$slug - messageId: $messageId > ${text.replace('\n', ' ').take(140)}...")
+                        response.appendLine(
+                            "NEW $chatId/$type/$slug - messageId: $messageId > ${
+                                text.replace('\n', ' ').take(140)
+                            }..."
+                        )
                         saveMessageStatus(slug, MessageStatus(messageId, toTelegramHash(text)))
                     }
                 }
@@ -42,7 +46,11 @@ class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10,
                             disableWebPagePreview = true
                             //button = listOf(listOf(InlineKeyboardButton("Meetup", event.meetupLink!!)))
                         ).result.message_id
-                        response.appendln("UPDATE $chatId/$type/$slug - messageId: $messageId > ${text.replace('\n', ' ').take(140)}...")
+                        response.appendLine(
+                            "UPDATE $chatId/$type/$slug - messageId: $messageId > ${
+                                text.replace('\n', ' ').take(140)
+                            }..."
+                        )
                         saveMessageStatus(slug, MessageStatus(messageId, toTelegramHash(text)))
                     }
                 }
@@ -62,7 +70,7 @@ class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10,
                         fromChatId = fromChatId,
                         messageId = fromMessageId
                     ).result.message_id
-                    response.appendln("FORWARD $chatId/$type/$slug - messageId: $messageId")
+                    response.appendLine("FORWARD $chatId/$type/$slug - messageId: $messageId")
                     saveMessageStatus(slug, MessageStatus(messageId, "forward"))
                 }
             }
@@ -77,7 +85,7 @@ class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10,
                 var isDeleted = true
                 try {
                     val status = TelegramApi.deleteMessage(chatId, messageStatus.id).result
-                    response.appendln("DELETED (deleteMessage) [$status] $slug")
+                    response.appendLine("DELETED (deleteMessage) [$status] $slug")
                 } catch (e: HttpResponseException) {
                     try {
                         // BOT limit: After 48h message can't be deleted
@@ -86,12 +94,12 @@ class TelegramHelper(val chatId: String, val type: String, val maxNew: Int = 10,
                             chatId = chatId, messageId = messageStatus.id,
                             text = "Evento spostato o eliminato"
                         ).result.message_id
-                        response.appendln("DELETED (editMessageText) [$messageId] $slug")
+                        response.appendLine("DELETED (editMessageText) [$messageId] $slug")
                     } catch (e: HttpResponseException) {
                         // message remove from other admin (or bot)
                         isDeleted = skipIfError
                         if (isDeleted) {
-                            response.appendln("DELETED (editMessageText) [already deleted] $slug")
+                            response.appendLine("DELETED (editMessageText) [already deleted] $slug")
                         }
                     }
                 }

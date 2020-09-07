@@ -4,8 +4,8 @@ import com.github.omarmiatello.gdgtools.appengine.FirebaseDatabaseApi
 import com.github.omarmiatello.gdgtools.appengine.fireMap
 import com.github.omarmiatello.gdgtools.utils.yearInt
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.map
-import kotlinx.serialization.serializer
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
 import java.util.*
 
 object FireDB : FirebaseDatabaseApi() {
@@ -19,22 +19,22 @@ object FireDB : FirebaseDatabaseApi() {
     private val KEY_TAG = "tag"
     private val KEY_TELEGRAM_MESSAGE = "telegram-message"
 
-    private val SERIALIZER_STRING_STRING = (String.serializer() to String.serializer()).map
-    private val SERIALIZER_SLUG_GROUP = (String.serializer() to GroupDao.serializer()).map
-    private val SERIALIZER_SLUG_EVENT = (String.serializer() to EventDao.serializer()).map
-    private val SERIALIZER_SLUG_SPEAKER = (String.serializer() to SpeakerDao.serializer()).map
-    private val SERIALIZER_SLUG_SLIDE = (String.serializer() to SlideDao.serializer()).map
-    private val SERIALIZER_SLUG_TAG = (String.serializer() to TagDao.serializer()).map
-    private val SERIALIZER_SLUG_TELEGRAMSTATUS = (String.serializer() to MessageStatus.serializer()).map
-    private val SERIALIZER_TYPE_SLUG_TELEGRAMSTATUS =
-        (String.serializer() to SERIALIZER_SLUG_TELEGRAMSTATUS).map
-    private val SERIALIZER_TAG_BY_YEAR_WITH_COUNTER = (String.serializer() to (String.serializer() to Int.serializer()).map).map
+    private val SERIALIZER_STRING_STRING = MapSerializer(String.serializer(), String.serializer())
+    private val SERIALIZER_SLUG_GROUP = MapSerializer(String.serializer(), GroupDao.serializer())
+    private val SERIALIZER_SLUG_EVENT = MapSerializer(String.serializer(), EventDao.serializer())
+    private val SERIALIZER_SLUG_SPEAKER = MapSerializer(String.serializer(), SpeakerDao.serializer())
+    private val SERIALIZER_SLUG_SLIDE = MapSerializer(String.serializer(), SlideDao.serializer())
+    private val SERIALIZER_SLUG_TAG = MapSerializer(String.serializer(), TagDao.serializer())
+    private val SERIALIZER_SLUG_TELEGRAMSTATUS = MapSerializer(String.serializer(), MessageStatus.serializer())
+    private val SERIALIZER_TYPE_SLUG_TELEGRAMSTATUS = MapSerializer(String.serializer(), SERIALIZER_SLUG_TELEGRAMSTATUS)
+    private val SERIALIZER_TAG_BY_YEAR_WITH_COUNTER =
+        MapSerializer(String.serializer(), MapSerializer(String.serializer(), Int.serializer()))
 
     var groupsMap by fireMap(KEY_GROUP, SERIALIZER_SLUG_GROUP)
     var meetupUrlnamesMap by fireMap(KEY_GROUP_MEETUP_URLNAME, SERIALIZER_STRING_STRING)
-    var eventsMap by fireMap(KEY_EVENT, (String.serializer() to SERIALIZER_SLUG_EVENT).map)
+    var eventsMap by fireMap(KEY_EVENT, MapSerializer(String.serializer(), SERIALIZER_SLUG_EVENT))
     var speakersMap by fireMap(KEY_SPEAKER, SERIALIZER_SLUG_SPEAKER)
-    var slidesMap by fireMap(KEY_SLIDE, (String.serializer() to SERIALIZER_SLUG_SLIDE).map)
+    var slidesMap by fireMap(KEY_SLIDE, MapSerializer(String.serializer(), SERIALIZER_SLUG_SLIDE))
     var tagsMap by fireMap(KEY_TAG, SERIALIZER_SLUG_TAG)
 
     // group
@@ -134,7 +134,7 @@ object FireDB : FirebaseDatabaseApi() {
     fun getTelegramMessageStatusByChat(chatId: String): Map<String, Map<String, MessageStatus>> =
         this["$KEY_TELEGRAM_MESSAGE/$chatId", SERIALIZER_TYPE_SLUG_TELEGRAMSTATUS].orEmpty()
 
-    fun getTelegramMessageStatusByType(chatId: String, type: String):  Map<String, MessageStatus> =
+    fun getTelegramMessageStatusByType(chatId: String, type: String): Map<String, MessageStatus> =
         this["$KEY_TELEGRAM_MESSAGE/$chatId/$type", SERIALIZER_SLUG_TELEGRAMSTATUS].orEmpty()
 
     fun deleteTelegramMessageStatus(chatId: String, type: String, slug: String) =

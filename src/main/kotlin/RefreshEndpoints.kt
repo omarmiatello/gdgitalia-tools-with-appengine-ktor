@@ -9,30 +9,30 @@ import com.github.omarmiatello.gdgtools.data.YearTagCounter
 import com.github.omarmiatello.gdgtools.data.knownTags
 import com.github.omarmiatello.gdgtools.utils.toJsonPretty
 import com.github.omarmiatello.gdgtools.utils.toSlug
-import io.ktor.application.call
-import io.ktor.response.respondText
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.route
-import kotlinx.serialization.list
+import io.ktor.application.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import kotlinx.serialization.builtins.ListSerializer
 
 fun Routing.refresh() {
     route("refresh") {
         get("firebase/from/meetup") {
-            val meetupGroups = MeetupApi.findGroups("gdg").filter { it.country == "IT" } + MeetupApi.findGroups("Google Cloud Developer Community").filter { it.country == "IT" }
+            val meetupGroups = MeetupApi.findGroups("gdg")
+                .filter { it.country == "IT" } + MeetupApi.findGroups("Google Cloud Developer Community")
+                .filter { it.country == "IT" }
             FireDB.allGroups = meetupGroups.map { it.toDao() }
             FireDB.meetupUrlnamesMap = meetupGroups.associateBy { it.gdgName.toSlug() }.mapValues { it.value.urlname }
-            call.respondText(meetupGroups.map { it.toDao() }.toJsonPretty(GroupDao.serializer().list))
+            call.respondText(meetupGroups.map { it.toDao() }.toJsonPretty(ListSerializer(GroupDao.serializer())))
         }
 
         get("firebase/from/meetup/events") {
             call.respondText(buildString {
                 val urlnamesMap = FireDB.meetupUrlnamesMap
-                appendln("${urlnamesMap.count()} GDG found in Firebase")
+                appendLine("${urlnamesMap.count()} GDG found in Firebase")
                 urlnamesMap.forEach { (groupSlug, urlnames) ->
                     val events = MeetupApi.getEvents(urlnames).map { it.toDao() }
                     FireDB.addEvents(events)
-                    appendln("Saved ${events.count()} events\tfrom $groupSlug")
+                    appendLine("Saved ${events.count()} events\tfrom $groupSlug")
                 }
                 append("ok")
             })
@@ -53,7 +53,7 @@ fun Routing.refresh() {
 
                     val slides = speakerDeckSlides + slideShareSlides
                     FireDB.addSlides(slides)
-                    appendln("${speaker.name} (${slides.count()} slides)\n${slides.joinToString("\n")}\n")
+                    appendLine("${speaker.name} (${slides.count()} slides)\n${slides.joinToString("\n")}\n")
                 }
             })
         }
@@ -138,7 +138,7 @@ fun Routing.refresh() {
                     )
                 }.associateBy { it.slug }
 
-                appendln("OK")
+                appendLine("OK")
             })
         }
     }

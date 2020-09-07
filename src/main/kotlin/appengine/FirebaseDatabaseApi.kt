@@ -8,7 +8,11 @@ import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestFactory
 import com.google.api.client.http.HttpResponse
 import com.google.api.client.http.HttpResponseException
-import kotlinx.serialization.*
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -77,7 +81,7 @@ abstract class FirebaseDatabaseApi {
         post("$basePath$path.json", obj, serializer)
 
     protected fun <T> update(path: String, map: Map<String, T>, serializer: KSerializer<T>) =
-        patch("$basePath$path.json", map, (String.serializer() to serializer).map)
+        patch("$basePath$path.json", map, MapSerializer(String.serializer(), serializer))
 
     protected fun deletePath(path: String) = delete("$basePath$path.json")
 }
@@ -89,8 +93,8 @@ inline fun <reified T> fireProperty(key: String, serializer: KSerializer<T>) =
         }
 
         override fun setValue(thisRef: FirebaseDatabaseApi, property: KProperty<*>, value: T?) {
-            thisRef[key, serializer] = value ?:
-                    throw IllegalArgumentException("Use deletePath() insted of set `null` in path: $key")
+            thisRef[key, serializer] =
+                value ?: throw IllegalArgumentException("Use deletePath() insted of set `null` in path: $key")
         }
     }
 

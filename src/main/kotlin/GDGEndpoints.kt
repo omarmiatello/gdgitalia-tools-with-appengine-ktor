@@ -3,19 +3,14 @@ package com.github.omarmiatello.gdgtools
 import com.github.omarmiatello.gdgtools.appengine.cacheUriOr
 import com.github.omarmiatello.gdgtools.data.*
 import com.github.omarmiatello.gdgtools.utils.toJsonPretty
-import io.ktor.application.call
-import io.ktor.html.Template
-import io.ktor.html.insert
-import io.ktor.html.respondHtml
-import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.Routing
-import io.ktor.routing.get
-import io.ktor.routing.route
+import io.ktor.application.*
+import io.ktor.html.*
+import io.ktor.http.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import kotlinx.html.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.list
+import kotlinx.serialization.builtins.ListSerializer
 
 
 @Serializable
@@ -26,7 +21,7 @@ fun Routing.gdg() {
         get("groups.json") {
             call.respondText(cacheUriOr {
                 val groups = FireDB.allGroups.toGroupResponseList()
-                groups.toJsonPretty(GroupResponse.serializer().list)
+                groups.toJsonPretty(ListSerializer(GroupResponse.serializer()))
             })
         }
 
@@ -37,7 +32,7 @@ fun Routing.gdg() {
                     val events = eventsMap[it.slug]?.values?.toEventResponseList()
                     it.toResponse(events)
                 }
-                groupsAndEvents.toJsonPretty(GroupResponse.serializer().list)
+                groupsAndEvents.toJsonPretty(ListSerializer(GroupResponse.serializer()))
             })
         }
 
@@ -112,7 +107,7 @@ fun Routing.gdg() {
         get("speakers.json") {
             call.respondText(cacheUriOr {
                 val speakers = FireDB.speakersMap.values.toSpeakerResponseList()
-                speakers.toJsonPretty(SpeakerResponse.serializer().list)
+                speakers.toJsonPretty(ListSerializer(SpeakerResponse.serializer()))
             })
         }
 
@@ -123,7 +118,7 @@ fun Routing.gdg() {
                     val slides = slidesMap[it.slug]?.values?.toSlideResponseList()
                     it.toResponse(slides)
                 }
-                speakersAndSlides.toJsonPretty(SpeakerResponse.serializer().list)
+                speakersAndSlides.toJsonPretty(ListSerializer(SpeakerResponse.serializer()))
             })
         }
 
@@ -141,7 +136,7 @@ fun Routing.gdg() {
         get("tag.json") {
             call.respondText(cacheUriOr {
                 val tagMap = FireDB.tagsMap.values.toTagResponseList()
-                tagMap.toJsonPretty(TagFullResponse.serializer().list)
+                tagMap.toJsonPretty(ListSerializer(TagFullResponse.serializer()))
             })
         }
 
@@ -201,7 +196,7 @@ fun Routing.gdg() {
             cacheUriOr {
                 val yearParam = call.parameters["year"]!!.toInt()
                 val allEvents = FireDB.getAllEventByYear(yearParam).toEventResponseList()
-                allEvents.toJsonPretty(EventResponse.serializer().list)
+                allEvents.toJsonPretty(ListSerializer(EventResponse.serializer()))
             }.also {
                 if (it.isEmpty()) call.respond(HttpStatusCode.NotFound) else call.respondText(it)
             }

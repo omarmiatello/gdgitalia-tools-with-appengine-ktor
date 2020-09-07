@@ -13,10 +13,10 @@ import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpHeaders
 import com.google.api.client.http.HttpRequestFactory
 import com.google.api.client.http.UrlEncodedContent
-import io.ktor.http.encodeURLQueryComponent
+import io.ktor.http.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.list
+import kotlinx.serialization.builtins.ListSerializer
 import java.util.*
 
 // https://www.meetup.com/it-IT/meetup_api/
@@ -56,7 +56,7 @@ object MeetupApi {
         country: String = "IT"
     ) =
         get("find/groups?country=$country&text=${query.encodeURLQueryComponent()}&radius=$radius&page=$limit&offset=$page&lat=$lat&lon=$lon&order=$orderType")
-            .parse(MeetupGroup.serializer().list)
+            .parse(ListSerializer(MeetupGroup.serializer()))
             .orEmpty()
 
     fun getEvents(
@@ -64,7 +64,7 @@ object MeetupApi {
         status: String = "past,upcoming"
     ) =
         get("$groupUrlName/events?status=$status")
-            .parse(MeetupEvent.serializer().list)
+            .parse(ListSerializer(MeetupEvent.serializer()))
             .orEmpty()
 
 
@@ -195,31 +195,43 @@ object MeetupApi {
         data class OAuthResponse(val access_token: String)
 
         fun authorize() = requestFactory()
-                .buildGetRequest(GenericUrl(
+            .buildGetRequest(
+                GenericUrl(
                     "https://secure.meetup.com/oauth2/authorize?client_id=${config.oauthClientId}" +
-                    "&response_type=code&redirect_uri=${config.oauthRedirect}"
-                ))
-                .execute()
+                            "&response_type=code&redirect_uri=${config.oauthRedirect}"
+                )
+            )
+            .execute()
 
-        fun access(clientCode: String)=  requestFactory()
-                .buildPostRequest(GenericUrl(
+        fun access(clientCode: String) = requestFactory()
+            .buildPostRequest(
+                GenericUrl(
                     "https://secure.meetup.com/oauth2/access"
-                ), UrlEncodedContent(mapOf("client_id" to config.oauthClientId,
-                        "client_secret" to config.oauthClientSecret ,
+                ), UrlEncodedContent(
+                    mapOf(
+                        "client_id" to config.oauthClientId,
+                        "client_secret" to config.oauthClientSecret,
                         "grant_type" to "authorization_code",
                         "redirect_uri" to config.oauthRedirect,
-                        "code" to clientCode)
-                ))
-                .execute()
+                        "code" to clientCode
+                    )
+                )
+            )
+            .execute()
 
         fun refreshToken(refreshToken: String = config.oauthClientRefreshToken) = requestFactory()
-                .buildPostRequest(GenericUrl(
+            .buildPostRequest(
+                GenericUrl(
                     "https://secure.meetup.com/oauth2/access"
-                ), UrlEncodedContent(mapOf("client_id" to config.oauthClientId,
-                        "client_secret" to config.oauthClientSecret ,
+                ), UrlEncodedContent(
+                    mapOf(
+                        "client_id" to config.oauthClientId,
+                        "client_secret" to config.oauthClientSecret,
                         "grant_type" to "refresh_token",
-                        "refresh_token" to refreshToken)
-                ))
-                .execute()
+                        "refresh_token" to refreshToken
+                    )
+                )
+            )
+            .execute()
     }
 }

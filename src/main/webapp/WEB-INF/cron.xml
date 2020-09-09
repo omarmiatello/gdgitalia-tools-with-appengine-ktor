@@ -49,6 +49,12 @@
         <timezone>Europe/Rome</timezone>
     </cron>
 
+    <cron>
+        <url>/notification/slack/nextweek</url>
+        <description>Send notification nextweek in Slack channel</description>
+        <schedule>every 4 hours from 08:00 to 20:00</schedule>
+        <timezone>Europe/Rome</timezone>
+    </cron>
 </cronentries>
 
 

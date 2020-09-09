@@ -33,22 +33,14 @@ private fun EventDao.telegramMessage(group: GroupDao, skipTags: List<Tag> = empt
 }
 
 private fun EventDao.slackMessage(group: GroupDao, skipTags: List<Tag> = emptyList()): String {
-    val skipLinks = skipTags.map { it.telegramLink }
-    val channels = getTagList().orEmpty()
-        .filter { it.telegramLink != null && it.telegramLink !in skipLinks }
-        .map { "[${it.channelName}](${it.telegramLink})" }
-        .distinct()
-        .joinToString(", ")
     val venue = if (!venueName.isNullOrEmpty()) {
         val address = listOfNotNull(venueAddress, venueCity).joinToString(", ")
         if (address.isNotEmpty()) "*$venueName* ($address)" else "*$venueName*"
     } else null
     val tag = tags?.takeIf { it.isNotEmpty() }
-    val channel = if (channels.isNotEmpty()) "Canali: $channels" else null
-    val footer = listOfNotNull(venue, tag, channel).joinToString("\n|").let { if (it.isNotEmpty()) "\n|$it" else it }
+    val footer = listOfNotNull(venue, tag).joinToString("\n|").let { if (it.isNotEmpty()) "\n|$it" else it }
     return """${group.name}: <$meetupLink|🎟 $name>
             |*$dateString* dalle $timeString$footer""".trimMargin()
-//                            |${description.orEmpty().htmlToTelegramMarkdown()}
 }
 
 private fun SlideDao.telegramMessage(speaker: SpeakerDao, skipChannels: List<Tag> = emptyList()): String {

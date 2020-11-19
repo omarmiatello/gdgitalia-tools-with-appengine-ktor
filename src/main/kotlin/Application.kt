@@ -94,6 +94,10 @@ fun Application.main() {
                             }
                             h1("title") { +"Telegram channel" }
                             p { a("https://t.me/gdgeventi") { +"@gdgeventi" } }
+
+                            unsafe {
+                                raw("""<iframe id="preview" style="border:0px;height:500px;width:500px;margin:5px;box-shadow: 0 0 16px 3px rgba(0,0,0,.2);" src="https://xn--r1a.website/s/gdgeventi" />""")
+                            }
                         }
                     }
                 }

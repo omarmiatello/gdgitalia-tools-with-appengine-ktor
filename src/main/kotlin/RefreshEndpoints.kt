@@ -71,7 +71,12 @@ fun Routing.refresh() {
                             .toMap()
                     }
                 }
-                groupsTags.forEach { groupSlug, tags -> FireDB.addGroupTags(groupSlug, tags) }
+                groupsTags.forEach { groupSlug, tags ->
+                    val group = FireDB.getGroup(groupSlug)
+                    if (group != null) {
+                        FireDB.addGroupTags(group.slug, tags)
+                    }
+                }
 
                 val slidesBySpeakerSlug = FireDB.slidesMap.mapValues { it.value.values }
                 val speakersTags: Map<String, YearTagCounter> = slidesBySpeakerSlug.mapValues { (_, allSlides) ->

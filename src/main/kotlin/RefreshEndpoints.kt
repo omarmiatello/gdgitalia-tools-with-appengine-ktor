@@ -14,12 +14,17 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.serialization.builtins.ListSerializer
 
+private fun findItalianGDG(vararg queries: String): List<MeetupApi.MeetupGroup> = queries.flatMap { query ->
+    MeetupApi.findGroups(query).filter {
+        it.country == "IT" &&
+                listOf("Google", "GDG", "GCDC").any { prefix -> it.name.startsWith(prefix, ignoreCase = true) }
+    }
+}.distinct()
+
 fun Routing.refresh() {
     route("refresh") {
         get("firebase/from/meetup") {
-            val meetupGroups = MeetupApi.findGroups("gdg")
-                .filter { it.country == "IT" } + MeetupApi.findGroups("Google Cloud Developer Community")
-                .filter { it.country == "IT" }
+            val meetupGroups = findItalianGDG("gdg", "Google Cloud Developer Community")
             FireDB.allGroups = meetupGroups.map { it.toDao() }
             FireDB.meetupUrlnamesMap = meetupGroups.associateBy { it.gdgName.toSlug() }.mapValues { it.value.urlname }
             call.respondText(meetupGroups.map { it.toDao() }.toJsonPretty(ListSerializer(GroupDao.serializer())))

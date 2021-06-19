@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.4.10'
+    ext.kotlin_version = '1.5.10'
     repositories {
         jcenter()
     }
@@ -9,8 +9,8 @@ buildscript {
 }
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
 }
 
 apply plugin: 'kotlin'
@@ -33,11 +33,10 @@ repositories {
 }
 
 dependencies {
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0"
-    implementation "io.ktor:ktor-server-servlet:1.4.0"
-    implementation "io.ktor:ktor-html-builder:1.4.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
+    implementation "io.ktor:ktor-server-servlet:1.5.0"
+    implementation "io.ktor:ktor-html-builder:1.5.0"
     implementation "com.google.cloud:google-cloud-logging-logback:0.73.0-alpha"
     implementation "com.google.appengine:appengine-api-1.0-sdk:1.9.76"
     implementation "com.google.api-client:google-api-client-appengine:1.30.4"

@@ -65,7 +65,7 @@ fun Application.main() {
                             p { a("/gdg/groups/gdg-milano") { +"groups/gdg-milano" } }
                             p { a("/gdg/tag") { +"tag" } }
                             p { a("/gdg/tag/devfest") { +"tag/devfest" } }
-                            p { a("/gdg/calendar/2020") { +"calendar/2020" } }
+                            p { a("/gdg/calendar/2021") { +"calendar/2021" } }
 
                             h1("title") { +"Telegram channel" }
                             p { a("https://t.me/gdgeventi") { +"@gdgeventi" } }
